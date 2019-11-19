@@ -54,7 +54,7 @@ void setSafeValue()
 
 int recogniseColor(byte* datain)
 {
-  if(datain[GREEN] > 120 && datain[BLUE] < 70 )
+  if(datain[GREEN] > 130 && datain[RED] < 50 )
   {
     return SEQUENCE_GREEN; 
   }
@@ -150,27 +150,19 @@ void controlLed(BLEDevice peripheral) {
     // read the button pin
     byte data[DATA_LENGTH];
     ledCharacteristic.readValue(data,DATA_LENGTH);
-//  data[0]=r;
-//  data[1]=g;
-//  data[2]=b;
-//  data[3]=0;
-//  data[4]=0;
-//  data[5]=0;
+
     if (recogniseColor(data) == SEQUENCE_GREEN)
     {
       analogWrite(channelA, FAST_PWM_VALUE);
       analogWrite(channelB, FAST_PWM_VALUE);
+      Serial.printf("* DATA s: %d,%d,%d\n", data[0], data[1], data[2]);
+      delay(1000);
     }
-  
-//        Serial.println("DATA Start");
-//        for(int i = 0; i < DATA_LENGTH; i++)
-//                {
-//                  Serial.println(data[i]);
-//                }
-//        Serial.println("DATA END");
-     
-        // button is released, write 0x00 to turn the LED off
-      }
+    else
+    {
+      Serial.printf("DATA : %d,%d,%d\n", data[0], data[1], data[2]);
+    }
+  }
   setSafeValue();
   Serial.println("Peripheral disconnected");
 }
